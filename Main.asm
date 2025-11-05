@@ -24,11 +24,20 @@ PROGRAM_START
         jsr PRINTLINE
 ; start your code here
 
+        ;Coppies Sprites Data
         jsr COPY_CAT_SPRITE
+        jsr COPY_MUSHROOM_SPRITE
+
+        ; Enable sprites
+        lda #%00000011
+        sta $D015 
+
+        ; Creates Rows of Data
         jsr DRAW_TEXT_LINES
+
+        ;Controls the Sprites
         jsr MOVE_CAT
         
-
 program_exit
         rts
 
@@ -58,10 +67,36 @@ COPY_LOOP
         lda #50
         sta $D001
 
-        lda #%00000001
-        sta $D015
+        rts
+
+; Description: Copy the mushroom sprite data to the sprite memory location for sprite 1.
+; Inputs: None
+; Outputs: 
+;    -Places the mushroom sprite in memory
+COPY_MUSHROOM_SPRITE
+        ldx #0
+COPY_MUSHROOM_LOOP
+        lda MUSHROOM_SPRITE_DATA,x
+        sta MUSHROOM_SPRITE_PIXELS,x
+        inx
+        cpx #64
+        bne COPY_MUSHROOM_LOOP
+
+        lda #$BB
+        sta $07F9
+
+        lda #5
+        sta $D028
+
+        lda #105
+        sta $D002
+
+        lda #110
+        sta $D003
 
         rts
+
+
 
 ; Description: It calls the individual subroutines to draw rows 5, 12, 17, and 22.
 ; Inputs: None
@@ -170,7 +205,7 @@ CHECK_COLLISION
 
         rts
 
-; Description: When a collision is detected between the cat sprite and the background text. It changes the cat sprite's color to red (by modifying the VIC-II register $D027).
+; Description: When a collision is detected between the cat sprite and the background text. It changes the cat sprite's color to red.
 ; Inputs: None
 ; Outputs: 
 ;    - Sprites color is changed to red
@@ -179,7 +214,6 @@ COLLISION_DETECTED
         sta $D027
 
         rts
-
 
 
 

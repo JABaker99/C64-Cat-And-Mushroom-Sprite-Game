@@ -30,7 +30,7 @@ PROGRAM_START
         jsr COPY_CAT_SPRITE
         jsr COPY_MUSHROOM_SPRITE
 
-        ; Enable sprite 1
+        ; Enable sprites
         lda #%00000011
         sta $D015 
 
@@ -194,13 +194,17 @@ MOVE_LOOP
         jmp MOVE_LOOP
         rts
 
-; Description: Checks if the cat sprite is colliding with the background text based on the value from $D01F.
+; Description: Checks if the cat sprite is colliding with the background text based on the value from $D01F or other sprite based on value from $D01E.
 ; Inputs: None
 ; Outputs: None
 CHECK_COLLISION
         lda $D01F
         and #$01
         bne COLLISION_DETECTED
+
+        lda $D01E
+        and #$02
+        bne COLLISION_WITH_MUSHROOM
 
         lda #$01
         sta $D027
@@ -217,7 +221,15 @@ COLLISION_DETECTED
 
         rts
 
+; Description: When a collision is detected between the cat sprite and the other sprite. It disables the second sprite.
+; Inputs: None
+; Outputs: 
+;    - Sprite 1 is now disabled and sprite 0 continues
+COLLISION_WITH_MUSHROOM
+        lda #%00000001
+        sta $D015
 
+        rts
 
 
 

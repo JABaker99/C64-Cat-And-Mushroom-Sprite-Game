@@ -26,6 +26,7 @@ PROGRAM_START
 
         jsr COPY_CAT_SPRITE
         jsr DRAW_TEXT_LINES
+        jsr MOVE_CAT
         
 
 program_exit
@@ -62,21 +63,6 @@ COPY_LOOP
 
         rts
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ; Description: It calls the individual subroutines to draw rows 5, 12, 17, and 22.
 ; Inputs: None
 ; Outputs: None
@@ -85,7 +71,6 @@ DRAW_TEXT_LINES
         jsr DRAW_ROW12
         jsr DRAW_ROW17
         jsr DRAW_ROW22
-  
         rts
 
 ; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory
@@ -148,10 +133,27 @@ DRAW_ROW22_LOOP
         bne DRAW_ROW22_LOOP
         rts
 
+; Description: This subroutine continuously moves the cat sprite down the screen by incrementing its Y-coordinate.
+; Inputs: None
+; Outputs: Updates the Y-coordinate of the cat sprite to move it down.
+MOVE_CAT
+MOVE_LOOP
+        lda $D001
+        clc
+        adc #5
+        sta $D001
+        
+        jsr WAIT_QUARTER_SECOND
+        
+        lda $D001
+        cmp #245
+        bcc MOVE_LOOP
 
-
-
-
+        lda #$20
+        sta $D001
+        jsr WAIT_QUARTER_SECOND
+        jmp MOVE_LOOP
+        rts
 
 
 

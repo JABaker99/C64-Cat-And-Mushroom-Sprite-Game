@@ -28,6 +28,7 @@ PROGRAM_START
 
         jsr COPY_CAT_SPRITE
         jsr DRAW_TEXT_LINES
+        jsr MOVE_CAT
         
 
 program_exit
@@ -79,7 +80,9 @@ COPY_LOOP
 
 
 
-
+; Description: It calls the individual subroutines to draw rows 5, 12, 17, and 22.
+; Inputs: None
+; Outputs: None
 DRAW_TEXT_LINES
         jsr DRAW_ROW5
         jsr DRAW_ROW12
@@ -88,7 +91,11 @@ DRAW_TEXT_LINES
   
         rts
 
-; Subroutine: Draw Row 5
+; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory
+; Inputs: 
+;    -ROW5_DATA - the character data to be displayed in row 5
+; Outputs: 
+;    -ROW5_DATA is added to address $04C8
 DRAW_ROW5
         ldx #0
 DRAW_ROW5_LOOP
@@ -99,8 +106,11 @@ DRAW_ROW5_LOOP
         bne DRAW_ROW5_LOOP
         rts
 
-
-; Subroutine: Draw Row 12
+; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory
+; Inputs: 
+;    -ROW12_DATA - the character data to be displayed in row 12
+; Outputs: 
+;    -ROW12_DATA is added to address $05E0
 DRAW_ROW12
         ldx #0
 DRAW_ROW12_LOOP
@@ -111,7 +121,11 @@ DRAW_ROW12_LOOP
         bne DRAW_ROW12_LOOP
         rts
 
-; Subroutine: Draw Row 17
+; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory
+; Inputs: 
+;    -ROW17_DATA - the character data to be displayed in row 17
+; Outputs: 
+;    -ROW17_DATA is added to address $06A8
 DRAW_ROW17
         ldx #0
 DRAW_ROW17_LOOP
@@ -122,7 +136,11 @@ DRAW_ROW17_LOOP
         bne DRAW_ROW17_LOOP
         rts
 
-; Subroutine: Draw Row 22
+; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory
+; Inputs:
+;    -ROW22_DATA - the character data to be displayed in row 22
+; Outputs: 
+;    -ROW22_DATA is added to address $0770
 DRAW_ROW22
         ldx #0
 DRAW_ROW22_LOOP
@@ -137,6 +155,35 @@ DRAW_ROW22_LOOP
 
 
 
+
+
+
+
+
+; Description: This subroutine continuously moves the cat sprite down the screen
+;              by incrementing its Y-coordinate. Once the sprite reaches the bottom,
+;              it wraps around to the top of the screen.
+; Inputs: None
+; Outputs: Updates the Y-coordinate of the cat sprite to move it down.
+MOVE_CAT
+        ; Infinite loop to move the cat sprite down the screen
+MOVE_LOOP
+        lda $D001            ; Load the current Y-coordinate of the cat sprite
+        clc                   ; Clear the carry flag to ensure proper addition
+        adc #5                ; Increment the Y-coordinate (move down)
+        sta $D001             ; Store the new Y-coordinate back to $D001
+        
+        jsr WAIT_QUARTER_SECOND ; Wait for 0.25 seconds (create a delay)
+        
+        lda $D001            ; Check the current Y-coordinate
+        cmp #245           ; Compare with $18 (24 in decimal), which is the bottom row
+        bcc MOVE_LOOP         ; If the Y-coordinate is less than $18, continue moving down
+
+        lda #$20              ; If we've reached the bottom, reset Y-coordinate to 0 (top of the screen)
+        sta $D001             ; Store the new Y-coordinate to wrap around
+        jsr WAIT_QUARTER_SECOND ; Optional: small delay before restarting the movement
+        jmp MOVE_LOOP         ; Jump back to the start of the loop to keep the cat moving
+        rts          
 
 
 

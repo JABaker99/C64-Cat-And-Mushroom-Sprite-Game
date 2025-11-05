@@ -19,177 +19,277 @@
 00019  0900             PROGRAM_START 
 00020  0900             
 00021  0900                        ; CLEAR THE SCREEN
-00022  0900  A9 32                 LDA #<CLEAR_CHAR
+00022  0900  A9 7A                 LDA #<CLEAR_CHAR
 00023  0902  A0 09                 LDY #>CLEAR_CHAR
 00024  0904  20 1E AB              JSR PRINTLINE
 00025  0907             ; START YOUR CODE HERE
 00026  0907             
-00027  0907  20 0B 09              JSR COPY_CAT_SPRITE
-00028  090A                        
-00029  090A             
-00030  090A             PROGRAM_EXIT 
-00031  090A  60                    RTS
-00032  090B             
-00033  090B             
-00034  090B             
-00035  090B             COPY_CAT_SPRITE 
-00036  090B  A2 00                 LDX #0
-00037  090D             COPY_LOOP
-00038  090D  BD 31 0A              LDA CAT_SPRITE_DATA,X
-00039  0910  9D 80 2E              STA CAT_SPRITE_PIXELS,X
-00040  0913  E8                    INX
-00041  0914  E0 40                 CPX #64
-00042  0916  D0 F5                 BNE COPY_LOOP
-00043  0918             
-00044  0918  A9 BA                 LDA #$BA
-00045  091A  8D F8 07              STA $07F8
-00046  091D             
-00047  091D  A9 01                 LDA #1
-00048  091F  8D 27 D0              STA $D027
-00049  0922             
-00050  0922  A9 64                 LDA #100
-00051  0924  8D 00 D0              STA $D000
-00052  0927  A9 32                 LDA #50
-00053  0929  8D 01 D0              STA $D001
-00054  092C             
-00055  092C  A9 01                 LDA #%00000001
-00056  092E  8D 15 D0              STA $D015
-00057  0931             
-00058  0931  60                    RTS
-00059  0932             
-00060  0932             
-00061  0932             
-00062  0932             
-00063  0932             
-00064  0932             
-00065  0932             ; PLEASE DON'T CHANGE ANYTHING AFTER THIS LINE.
-00066  0932             ; BAD STUFF WILL HAPPEN
-00067  0932             CLEAR_CHAR 
-00068  0932                        ; THE CLEARSCREEN CHARACTER
-00069  0932  93                    BYTE 147
-00070  0933                        ; CARRIAGE RETURN & TERMINATE THE STRING
-00071  0933  0D 00                 BYTE 13, 00
+00027  0907  20 0E 09              JSR COPY_CAT_SPRITE
+00028  090A  20 35 09              JSR DRAW_TEXT_LINES
+00029  090D                        
+00030  090D             
+00031  090D             PROGRAM_EXIT 
+00032  090D  60                    RTS
+00033  090E             
+00034  090E             
+00035  090E             ; DESCRIPTION: COPY THE CAT SPRITE DATA FROM CAT_SPRITE_DATA TO THE SPRITE MEMORY LOCATION DEFINED BY CAT_SPRITE_PIXELS
+00036  090E             ; INPUTS:
+00037  090E             ;    -CAT_SPRITE_DATA - STARTING ADDRESS OF THE CAT SPRITE BYTES
+00038  090E             ; OUTPUTS:
+00039  090E             ;    -CAT_SPRITE_PIXELS - MEMORY LOCATION WHERE THE CAT SPRITE BYTES ARE COPIED
+00040  090E             COPY_CAT_SPRITE 
+00041  090E  A2 00                 LDX #0
+00042  0910             COPY_LOOP
+00043  0910  BD 79 0A              LDA CAT_SPRITE_DATA,X
+00044  0913  9D 80 2E              STA CAT_SPRITE_PIXELS,X
+00045  0916  E8                    INX
+00046  0917  E0 40                 CPX #64
+00047  0919  D0 F5                 BNE COPY_LOOP
+00048  091B             
+00049  091B  A9 BA                 LDA #$BA
+00050  091D  8D F8 07              STA $07F8
+00051  0920             
+00052  0920  A9 01                 LDA #1
+00053  0922  8D 27 D0              STA $D027
+00054  0925             
+00055  0925  A9 64                 LDA #100
+00056  0927  8D 00 D0              STA $D000
+00057  092A  A9 32                 LDA #50
+00058  092C  8D 01 D0              STA $D001
+00059  092F             
+00060  092F  A9 01                 LDA #%00000001
+00061  0931  8D 15 D0              STA $D015
+00062  0934             
+00063  0934  60                    RTS
+00064  0935             
+00065  0935             
+00066  0935             
+00067  0935             
+00068  0935             
+00069  0935             
+00070  0935             
+00071  0935             
 00072  0935             
 00073  0935             
-00074  0935             ; INTERNAL VARIABLE FOR WAIT
-00075  0935  00         JIFFY_COUNTER BYTE 00
-00076  0936             
-00077  0936             ; PAUSES THE PROGRAM FOR APPROXIMATELY 1 SECOND
-00078  0936             WAIT_QUARTER_SECOND 
-00079  0936                        ; SAVE STACK
-00080  0936  08                    PHP
-00081  0937  48                    PHA
-00082  0938  8A                    TXA
-00083  0939  48                    PHA
-00084  093A  98                    TYA
-00085  093B  48                    PHA
-00086  093C             
-00087  093C             ; COUNT UP ONE QUARTER SECOND
-00088  093C  A5 A2                 LDA $A2
-00089  093E  69 0F                 ADC #15
-00090  0940  8D 35 09              STA JIFFY_COUNTER
-00091  0943             
-00092  0943             COUNT_JIFFIES_LOOP 
-00093  0943  A5 A2                 LDA $A2
-00094  0945  CD 35 09              CMP JIFFY_COUNTER
-00095  0948  D0 F9                 BNE COUNT_JIFFIES_LOOP
-00096  094A             
-00097  094A             
-00098  094A             ; REPAIR REGISTER STATE
-00099  094A  68                    PLA
-00100  094B  A8                    TAY
-00101  094C  68                    PLA
-00102  094D  AA                    TAX
-00103  094E  68                    PLA
-00104  094F  28                    PLP
-00105  0950             
-00106  0950  60                    RTS
-00107  0951             
-00108  0951             
-00109  0951             ; SCREEN 1 -  SCREEN DATA
-00110  0951             ROW5_DATA
-00111  0951  7F 7F 7F              BYTE    $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F
-00112  0979             ROW12_DATA 
-00113  0979  53 53 53              BYTE    $53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53
-00114  09A1             ROW17_DATA 
-00115  09A1  3D 3D 3D              BYTE    $3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D
-00116  09C9             ROW22_DATA 
-00117  09C9  5F 5F 5F              BYTE    $5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F
-00118  09F1             
-00119  09F1             ; SPRITE DATA
-00120  09F1             MUSHROOM_SPRITE_DATA 
-00121  09F1  07 FF E0              BYTE $07,$FF,$E0
-00122  09F4  0F FF F0              BYTE $0F,$FF,$F0
-00123  09F7  19 80 18              BYTE $19,$80,$18
-00124  09FA  30 31 8C              BYTE $30,$31,$8C
-00125  09FD  60 31 86              BYTE $60,$31,$86
-00126  0A00  63 00 06              BYTE $63,$00,$06
-00127  0A03  E3 06 07              BYTE $E3,$06,$07
-00128  0A06  C0 06 63              BYTE $C0,$06,$63
-00129  0A09  CC 30 63              BYTE $CC,$30,$63
-00130  0A0C  CC 30 03              BYTE $CC,$30,$03
-00131  0A0F  C1 86 1B              BYTE $C1,$86,$1B
-00132  0A12  7F FF FE              BYTE $7F,$FF,$FE
-00133  0A15  1F FF F8              BYTE $1F,$FF,$F8
-00134  0A18  08 00 08              BYTE $08,$00,$08
-00135  0A1B  08 C3 08              BYTE $08,$C3,$08
-00136  0A1E  08 00 08              BYTE $08,$00,$08
-00137  0A21  08 00 08              BYTE $08,$00,$08
-00138  0A24  08 42 08              BYTE $08,$42,$08
-00139  0A27  08 3C 08              BYTE $08,$3C,$08
-00140  0A2A  0C 00 18              BYTE $0C,$00,$18
-00141  0A2D  07 FF F0              BYTE $07,$FF,$F0
-00142  0A30  00                    BYTE $00
-00143  0A31             
-00144  0A31             CAT_SPRITE_DATA 
-00145  0A31  70 00 0E              BYTE $70,$00,$0E
-00146  0A34  8C 00 31              BYTE $8C,$00,$31
-00147  0A37  B2 00 4D              BYTE $B2,$00,$4D
-00148  0A3A  BB 00 DD              BYTE $BB,$00,$DD
-00149  0A3D  B9 FF 9D              BYTE $B9,$FF,$9D
-00150  0A40  B7 FF ED              BYTE $B7,$FF,$ED
-00151  0A43  AF FF F5              BYTE $AF,$FF,$F5
-00152  0A46  9F 7E F9              BYTE $9F,$7E,$F9
-00153  0A49  7E BD 7E              BYTE $7E,$BD,$7E
-00154  0A4C  3D DB BC              BYTE $3D,$DB,$BC
-00155  0A4F  7F FF FF              BYTE $7F,$FF,$FF
-00156  0A52  FF FF FF              BYTE $FF,$FF,$FF
-00157  0A55  FF E7 FF              BYTE $FF,$E7,$FF
-00158  0A58  FF FF FF              BYTE $FF,$FF,$FF
-00159  0A5B  FF FF FF              BYTE $FF,$FF,$FF
-00160  0A5E  FF 7E FF              BYTE $FF,$7E,$FF
-00161  0A61  FF BD FF              BYTE $FF,$BD,$FF
-00162  0A64  FF DB FF              BYTE $FF,$DB,$FF
-00163  0A67  7F E7 FE              BYTE $7F,$E7,$FE
-00164  0A6A  3F FF FC              BYTE $3F,$FF,$FC
-00165  0A6D  0F FF F8              BYTE $0F,$FF,$F8
-00166  0A70  00                    BYTE $00
-00167  0A71             
+00074  0935             
+00075  0935             
+00076  0935             
+00077  0935             
+00078  0935             
+00079  0935             
+00080  0935             
+00081  0935             DRAW_TEXT_LINES 
+00082  0935  20 42 09              JSR DRAW_ROW5
+00083  0938  20 50 09              JSR DRAW_ROW12
+00084  093B  20 5E 09              JSR DRAW_ROW17
+00085  093E  20 6C 09              JSR DRAW_ROW22
+00086  0941                        
+00087  0941  60                    RTS
+00088  0942             
+00089  0942             ; SUBROUTINE: DRAW ROW 5
+00090  0942             DRAW_ROW5
+00091  0942  A2 00                 LDX #0
+00092  0944             DRAW_ROW5_LOOP 
+00093  0944  BD 99 09              LDA ROW5_DATA,X
+00094  0947  9D C8 04              STA $04C8,X
+00095  094A  E8                    INX
+00096  094B  E0 28                 CPX #40
+00097  094D  D0 F5                 BNE DRAW_ROW5_LOOP
+00098  094F  60                    RTS
+00099  0950             
+00100  0950             
+00101  0950             ; SUBROUTINE: DRAW ROW 12
+00102  0950             DRAW_ROW12 
+00103  0950  A2 00                 LDX #0
+00104  0952             DRAW_ROW12_LOOP 
+00105  0952  BD C1 09              LDA ROW12_DATA,X
+00106  0955  9D E0 05              STA $05E0,X
+00107  0958  E8                    INX
+00108  0959  E0 28                 CPX #40
+00109  095B  D0 F5                 BNE DRAW_ROW12_LOOP
+00110  095D  60                    RTS
+00111  095E             
+00112  095E             ; SUBROUTINE: DRAW ROW 17
+00113  095E             DRAW_ROW17 
+00114  095E  A2 00                 LDX #0
+00115  0960             DRAW_ROW17_LOOP 
+00116  0960  BD E9 09              LDA ROW17_DATA,X
+00117  0963  9D A8 06              STA $06A8,X
+00118  0966  E8                    INX
+00119  0967  E0 28                 CPX #40
+00120  0969  D0 F5                 BNE DRAW_ROW17_LOOP
+00121  096B  60                    RTS
+00122  096C             
+00123  096C             ; SUBROUTINE: DRAW ROW 22
+00124  096C             DRAW_ROW22 
+00125  096C  A2 00                 LDX #0
+00126  096E             DRAW_ROW22_LOOP 
+00127  096E  BD 11 0A              LDA ROW22_DATA,X
+00128  0971  9D 70 07              STA $0770,X
+00129  0974  E8                    INX
+00130  0975  E0 28                 CPX #40
+00131  0977  D0 F5                 BNE DRAW_ROW22_LOOP
+00132  0979  60                    RTS
+00133  097A             
+00134  097A             
+00135  097A             
+00136  097A             
+00137  097A             
+00138  097A             
+00139  097A             
+00140  097A             
+00141  097A             
+00142  097A             
+00143  097A             
+00144  097A             
+00145  097A             
+00146  097A             
+00147  097A             
+00148  097A             
+00149  097A             
+00150  097A             
+00151  097A             
+00152  097A             
+00153  097A             
+00154  097A             
+00155  097A             
+00156  097A             
+00157  097A             
+00158  097A             
+00159  097A             
+00160  097A             ; PLEASE DON'T CHANGE ANYTHING AFTER THIS LINE.
+00161  097A             ; BAD STUFF WILL HAPPEN
+00162  097A             CLEAR_CHAR 
+00163  097A                        ; THE CLEARSCREEN CHARACTER
+00164  097A  93                    BYTE 147
+00165  097B                        ; CARRIAGE RETURN & TERMINATE THE STRING
+00166  097B  0D 00                 BYTE 13, 00
+00167  097D             
+00168  097D             
+00169  097D             ; INTERNAL VARIABLE FOR WAIT
+00170  097D  00         JIFFY_COUNTER BYTE 00
+00171  097E             
+00172  097E             ; PAUSES THE PROGRAM FOR APPROXIMATELY 1 SECOND
+00173  097E             WAIT_QUARTER_SECOND 
+00174  097E                        ; SAVE STACK
+00175  097E  08                    PHP
+00176  097F  48                    PHA
+00177  0980  8A                    TXA
+00178  0981  48                    PHA
+00179  0982  98                    TYA
+00180  0983  48                    PHA
+00181  0984             
+00182  0984             ; COUNT UP ONE QUARTER SECOND
+00183  0984  A5 A2                 LDA $A2
+00184  0986  69 0F                 ADC #15
+00185  0988  8D 7D 09              STA JIFFY_COUNTER
+00186  098B             
+00187  098B             COUNT_JIFFIES_LOOP 
+00188  098B  A5 A2                 LDA $A2
+00189  098D  CD 7D 09              CMP JIFFY_COUNTER
+00190  0990  D0 F9                 BNE COUNT_JIFFIES_LOOP
+00191  0992             
+00192  0992             
+00193  0992             ; REPAIR REGISTER STATE
+00194  0992  68                    PLA
+00195  0993  A8                    TAY
+00196  0994  68                    PLA
+00197  0995  AA                    TAX
+00198  0996  68                    PLA
+00199  0997  28                    PLP
+00200  0998             
+00201  0998  60                    RTS
+00202  0999             
+00203  0999             
+00204  0999             ; SCREEN 1 -  SCREEN DATA
+00205  0999             ROW5_DATA
+00206  0999  7F 7F 7F              BYTE    $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F
+00207  09C1             ROW12_DATA 
+00208  09C1  53 53 53              BYTE    $53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53
+00209  09E9             ROW17_DATA 
+00210  09E9  3D 3D 3D              BYTE    $3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D
+00211  0A11             ROW22_DATA 
+00212  0A11  5F 5F 5F              BYTE    $5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F
+00213  0A39             
+00214  0A39             ; SPRITE DATA
+00215  0A39             MUSHROOM_SPRITE_DATA 
+00216  0A39  07 FF E0              BYTE $07,$FF,$E0
+00217  0A3C  0F FF F0              BYTE $0F,$FF,$F0
+00218  0A3F  19 80 18              BYTE $19,$80,$18
+00219  0A42  30 31 8C              BYTE $30,$31,$8C
+00220  0A45  60 31 86              BYTE $60,$31,$86
+00221  0A48  63 00 06              BYTE $63,$00,$06
+00222  0A4B  E3 06 07              BYTE $E3,$06,$07
+00223  0A4E  C0 06 63              BYTE $C0,$06,$63
+00224  0A51  CC 30 63              BYTE $CC,$30,$63
+00225  0A54  CC 30 03              BYTE $CC,$30,$03
+00226  0A57  C1 86 1B              BYTE $C1,$86,$1B
+00227  0A5A  7F FF FE              BYTE $7F,$FF,$FE
+00228  0A5D  1F FF F8              BYTE $1F,$FF,$F8
+00229  0A60  08 00 08              BYTE $08,$00,$08
+00230  0A63  08 C3 08              BYTE $08,$C3,$08
+00231  0A66  08 00 08              BYTE $08,$00,$08
+00232  0A69  08 00 08              BYTE $08,$00,$08
+00233  0A6C  08 42 08              BYTE $08,$42,$08
+00234  0A6F  08 3C 08              BYTE $08,$3C,$08
+00235  0A72  0C 00 18              BYTE $0C,$00,$18
+00236  0A75  07 FF F0              BYTE $07,$FF,$F0
+00237  0A78  00                    BYTE $00
+00238  0A79             
+00239  0A79             CAT_SPRITE_DATA 
+00240  0A79  70 00 0E              BYTE $70,$00,$0E
+00241  0A7C  8C 00 31              BYTE $8C,$00,$31
+00242  0A7F  B2 00 4D              BYTE $B2,$00,$4D
+00243  0A82  BB 00 DD              BYTE $BB,$00,$DD
+00244  0A85  B9 FF 9D              BYTE $B9,$FF,$9D
+00245  0A88  B7 FF ED              BYTE $B7,$FF,$ED
+00246  0A8B  AF FF F5              BYTE $AF,$FF,$F5
+00247  0A8E  9F 7E F9              BYTE $9F,$7E,$F9
+00248  0A91  7E BD 7E              BYTE $7E,$BD,$7E
+00249  0A94  3D DB BC              BYTE $3D,$DB,$BC
+00250  0A97  7F FF FF              BYTE $7F,$FF,$FF
+00251  0A9A  FF FF FF              BYTE $FF,$FF,$FF
+00252  0A9D  FF E7 FF              BYTE $FF,$E7,$FF
+00253  0AA0  FF FF FF              BYTE $FF,$FF,$FF
+00254  0AA3  FF FF FF              BYTE $FF,$FF,$FF
+00255  0AA6  FF 7E FF              BYTE $FF,$7E,$FF
+00256  0AA9  FF BD FF              BYTE $FF,$BD,$FF
+00257  0AAC  FF DB FF              BYTE $FF,$DB,$FF
+00258  0AAF  7F E7 FE              BYTE $7F,$E7,$FE
+00259  0AB2  3F FF FC              BYTE $3F,$FF,$FC
+00260  0AB5  0F FF F8              BYTE $0F,$FF,$F8
+00261  0AB8  00                    BYTE $00
+00262  0AB9             
 
-******* 14 Label(s) *******
-CAT_SPRITE_DATA = $0A31 
-CLEAR_CHAR = $0932 
-COPY_CAT_SPRITE = $090B 
-COPY_LOOP = $090D 
-count_jiffies_loop = $0943 
-JIFFY_COUNTER = $0935 
-MUSHROOM_SPRITE_DATA = $09F1 
-program_exit = $090A 
+******* 23 Label(s) *******
+CAT_SPRITE_DATA = $0A79 
+CLEAR_CHAR = $097A 
+COPY_CAT_SPRITE = $090E 
+COPY_LOOP = $0910 
+count_jiffies_loop = $098B 
+DRAW_ROW12 = $0950 
+DRAW_ROW12_LOOP = $0952 
+DRAW_ROW17 = $095E 
+DRAW_ROW17_LOOP = $0960 
+DRAW_ROW22 = $096C 
+DRAW_ROW22_LOOP = $096E 
+DRAW_ROW5 = $0942 
+DRAW_ROW5_LOOP = $0944 
+DRAW_TEXT_LINES = $0935 
+JIFFY_COUNTER = $097D 
+MUSHROOM_SPRITE_DATA = $0A39 
+program_exit = $090D 
 PROGRAM_START = $0900 
-ROW12_DATA = $0979 
-ROW17_DATA = $09A1 
-ROW22_DATA = $09C9 
-ROW5_DATA = $0951 
-WAIT_QUARTER_SECOND = $0936 
+ROW12_DATA = $09C1 
+ROW17_DATA = $09E9 
+ROW22_DATA = $0A11 
+ROW5_DATA = $0999 
+WAIT_QUARTER_SECOND = $097E 
 
-******* 8 Unused label(s) *******
+******* 4 Unused label(s) *******
 MUSHROOM_SPRITE_DATA
 program_exit
 PROGRAM_START
-ROW12_DATA
-ROW17_DATA
-ROW22_DATA
-ROW5_DATA
 WAIT_QUARTER_SECOND
 
 ******* 4 Variable(s) *******

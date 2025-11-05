@@ -27,13 +27,18 @@ PROGRAM_START
 ; start your code here
 
         jsr COPY_CAT_SPRITE
+        jsr DRAW_TEXT_LINES
         
 
 program_exit
         rts
 
 
-
+; Description: Copy the cat sprite data from CAT_SPRITE_DATA to the sprite memory location defined by CAT_SPRITE_PIXELS
+; Inputs:     
+;    -CAT_SPRITE_DATA - starting address of the cat sprite bytes
+; Outputs:    
+;    -CAT_SPRITE_PIXELS - memory location where the cat sprite bytes are copied
 COPY_CAT_SPRITE
         ldx #0
 COPY_LOOP
@@ -58,6 +63,96 @@ COPY_LOOP
         sta $D015
 
         rts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DRAW_TEXT_LINES
+        jsr DRAW_ROW5
+        jsr DRAW_ROW12
+        jsr DRAW_ROW17
+        jsr DRAW_ROW22
+  
+        rts
+
+; Subroutine: Draw Row 5
+DRAW_ROW5
+        ldx #0
+DRAW_ROW5_LOOP
+        lda ROW5_DATA,x
+        sta $04C8,x
+        inx
+        cpx #40
+        bne DRAW_ROW5_LOOP
+        rts
+
+
+; Subroutine: Draw Row 12
+DRAW_ROW12
+        ldx #0
+DRAW_ROW12_LOOP
+        lda ROW12_DATA,x
+        sta $05E0,x
+        inx
+        cpx #40
+        bne DRAW_ROW12_LOOP
+        rts
+
+; Subroutine: Draw Row 17
+DRAW_ROW17
+        ldx #0
+DRAW_ROW17_LOOP
+        lda ROW17_DATA,x
+        sta $06A8,x
+        inx
+        cpx #40
+        bne DRAW_ROW17_LOOP
+        rts
+
+; Subroutine: Draw Row 22
+DRAW_ROW22
+        ldx #0
+DRAW_ROW22_LOOP
+        lda ROW22_DATA,x
+        sta $0770,x
+        inx
+        cpx #40
+        bne DRAW_ROW22_LOOP
+        rts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

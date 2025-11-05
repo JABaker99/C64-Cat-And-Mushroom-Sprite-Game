@@ -25,6 +25,7 @@ PROGRAM_START
 ; start your code here
 
         jsr COPY_CAT_SPRITE
+        jsr DRAW_TEXT_LINES
         
 
 program_exit
@@ -60,6 +61,113 @@ COPY_LOOP
         sta $D015
 
         rts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+; Description: It calls the individual subroutines to draw rows 5, 12, 17, and 22.
+; Inputs: None
+; Outputs: None
+DRAW_TEXT_LINES
+        jsr DRAW_ROW5
+        jsr DRAW_ROW12
+        jsr DRAW_ROW17
+        jsr DRAW_ROW22
+  
+        rts
+
+; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory
+; Inputs: 
+;    -ROW5_DATA - the character data to be displayed in row 5
+; Outputs: 
+;    -ROW5_DATA is added to address $04C8
+DRAW_ROW5
+        ldx #0
+DRAW_ROW5_LOOP
+        lda ROW5_DATA,x
+        sta $04C8,x
+        inx
+        cpx #40
+        bne DRAW_ROW5_LOOP
+        rts
+
+; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory
+; Inputs: 
+;    -ROW12_DATA - the character data to be displayed in row 12
+; Outputs: 
+;    -ROW12_DATA is added to address $05E0
+DRAW_ROW12
+        ldx #0
+DRAW_ROW12_LOOP
+        lda ROW12_DATA,x
+        sta $05E0,x
+        inx
+        cpx #40
+        bne DRAW_ROW12_LOOP
+        rts
+
+; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory
+; Inputs: 
+;    -ROW17_DATA - the character data to be displayed in row 17
+; Outputs: 
+;    -ROW17_DATA is added to address $06A8
+DRAW_ROW17
+        ldx #0
+DRAW_ROW17_LOOP
+        lda ROW17_DATA,x
+        sta $06A8,x
+        inx
+        cpx #40
+        bne DRAW_ROW17_LOOP
+        rts
+
+; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory
+; Inputs:
+;    -ROW22_DATA - the character data to be displayed in row 22
+; Outputs: 
+;    -ROW22_DATA is added to address $0770
+DRAW_ROW22
+        ldx #0
+DRAW_ROW22_LOOP
+        lda ROW22_DATA,x
+        sta $0770,x
+        inx
+        cpx #40
+        bne DRAW_ROW22_LOOP
+        rts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

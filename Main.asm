@@ -33,7 +33,7 @@ program_exit
         rts
 
 
-; Description: Copy the cat sprite data from CAT_SPRITE_DATA to the sprite memory location defined by CAT_SPRITE_PIXELS
+; Description: Copy the cat sprite data from CAT_SPRITE_DATA to the sprite memory location defined by CAT_SPRITE_PIXELS.
 ; Inputs:     
 ;    -CAT_SPRITE_DATA - starting address of the cat sprite bytes
 ; Outputs:    
@@ -73,7 +73,7 @@ DRAW_TEXT_LINES
         jsr DRAW_ROW22
         rts
 
-; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory
+; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory.
 ; Inputs: 
 ;    -ROW5_DATA - the character data to be displayed in row 5
 ; Outputs: 
@@ -88,7 +88,7 @@ DRAW_ROW5_LOOP
         bne DRAW_ROW5_LOOP
         rts
 
-; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory
+; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory.
 ; Inputs: 
 ;    -ROW12_DATA - the character data to be displayed in row 12
 ; Outputs: 
@@ -103,7 +103,7 @@ DRAW_ROW12_LOOP
         bne DRAW_ROW12_LOOP
         rts
 
-; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory
+; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory.
 ; Inputs: 
 ;    -ROW17_DATA - the character data to be displayed in row 17
 ; Outputs: 
@@ -118,7 +118,7 @@ DRAW_ROW17_LOOP
         bne DRAW_ROW17_LOOP
         rts
 
-; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory
+; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory.
 ; Inputs:
 ;    -ROW22_DATA - the character data to be displayed in row 22
 ; Outputs: 
@@ -142,6 +142,8 @@ MOVE_LOOP
         clc
         adc #5
         sta $D001
+
+        jsr CHECK_COLLISION
         
         jsr WAIT_QUARTER_SECOND
         
@@ -154,6 +156,29 @@ MOVE_LOOP
         jsr WAIT_QUARTER_SECOND
         jmp MOVE_LOOP
         rts
+
+; Description: When a collision is detected between the cat sprite and the background text. It changes the cat sprite's color to red (by modifying the VIC-II register $D027).
+; Inputs: None
+; Outputs: 
+;    - Sprites color is changed to red
+CHECK_COLLISION
+        lda $D01F
+        and #$01
+        bne COLLISION_DETECTED
+
+        lda #$01
+        sta $D027
+
+        rts
+
+COLLISION_DETECTED
+        lda #$02
+        sta $D027
+
+        rts
+
+
+
 
 
 

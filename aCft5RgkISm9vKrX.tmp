@@ -35,7 +35,7 @@ program_exit
         rts
 
 
-; Description: Copy the cat sprite data from CAT_SPRITE_DATA to the sprite memory location defined by CAT_SPRITE_PIXELS
+; Description: Copy the cat sprite data from CAT_SPRITE_DATA to the sprite memory location defined by CAT_SPRITE_PIXELS.
 ; Inputs:     
 ;    -CAT_SPRITE_DATA - starting address of the cat sprite bytes
 ; Outputs:    
@@ -65,21 +65,6 @@ COPY_LOOP
 
         rts
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ; Description: It calls the individual subroutines to draw rows 5, 12, 17, and 22.
 ; Inputs: None
 ; Outputs: None
@@ -88,10 +73,9 @@ DRAW_TEXT_LINES
         jsr DRAW_ROW12
         jsr DRAW_ROW17
         jsr DRAW_ROW22
-  
         rts
 
-; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory
+; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory.
 ; Inputs: 
 ;    -ROW5_DATA - the character data to be displayed in row 5
 ; Outputs: 
@@ -106,7 +90,7 @@ DRAW_ROW5_LOOP
         bne DRAW_ROW5_LOOP
         rts
 
-; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory
+; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory.
 ; Inputs: 
 ;    -ROW12_DATA - the character data to be displayed in row 12
 ; Outputs: 
@@ -121,7 +105,7 @@ DRAW_ROW12_LOOP
         bne DRAW_ROW12_LOOP
         rts
 
-; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory
+; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory.
 ; Inputs: 
 ;    -ROW17_DATA - the character data to be displayed in row 17
 ; Outputs: 
@@ -136,7 +120,7 @@ DRAW_ROW17_LOOP
         bne DRAW_ROW17_LOOP
         rts
 
-; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory
+; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory.
 ; Inputs:
 ;    -ROW22_DATA - the character data to be displayed in row 22
 ; Outputs: 
@@ -151,39 +135,52 @@ DRAW_ROW22_LOOP
         bne DRAW_ROW22_LOOP
         rts
 
-
-
-
-
-
-
-
-
-
-; Description: This subroutine continuously moves the cat sprite down the screen
-;              by incrementing its Y-coordinate. Once the sprite reaches the bottom,
-;              it wraps around to the top of the screen.
+; Description: This subroutine continuously moves the cat sprite down the screen by incrementing its Y-coordinate.
 ; Inputs: None
 ; Outputs: Updates the Y-coordinate of the cat sprite to move it down.
 MOVE_CAT
-        ; Infinite loop to move the cat sprite down the screen
 MOVE_LOOP
-        lda $D001            ; Load the current Y-coordinate of the cat sprite
-        clc                   ; Clear the carry flag to ensure proper addition
-        adc #5                ; Increment the Y-coordinate (move down)
-        sta $D001             ; Store the new Y-coordinate back to $D001
-        
-        jsr WAIT_QUARTER_SECOND ; Wait for 0.25 seconds (create a delay)
-        
-        lda $D001            ; Check the current Y-coordinate
-        cmp #245           ; Compare with $18 (24 in decimal), which is the bottom row
-        bcc MOVE_LOOP         ; If the Y-coordinate is less than $18, continue moving down
+        lda $D001
+        clc
+        adc #5
+        sta $D001
 
-        lda #$20              ; If we've reached the bottom, reset Y-coordinate to 0 (top of the screen)
-        sta $D001             ; Store the new Y-coordinate to wrap around
-        jsr WAIT_QUARTER_SECOND ; Optional: small delay before restarting the movement
-        jmp MOVE_LOOP         ; Jump back to the start of the loop to keep the cat moving
-        rts          
+        jsr CHECK_COLLISION
+        
+        jsr WAIT_QUARTER_SECOND
+        
+        lda $D001
+        cmp #245
+        bcc MOVE_LOOP
+
+        lda #$20
+        sta $D001
+        jsr WAIT_QUARTER_SECOND
+        jmp MOVE_LOOP
+        rts
+
+; Description: Checks if the cat sprite is colliding with the background text based on the value from $D01F.
+; Inputs: None
+; Outputs: None
+CHECK_COLLISION
+        lda $D01F
+        ;lsr a
+        and #$01
+        bne COLLISION_DETECTED
+
+        lda #$01
+        sta $D027
+
+        rts
+
+COLLISION_DETECTED
+        lda #$02
+        sta $D027
+
+        rts
+
+
+
 
 
 

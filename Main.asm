@@ -157,10 +157,9 @@ MOVE_LOOP
         jmp MOVE_LOOP
         rts
 
-; Description: When a collision is detected between the cat sprite and the background text. It changes the cat sprite's color to red (by modifying the VIC-II register $D027).
+; Description: Checks if the cat sprite is colliding with the background text based on the value from $D01F.
 ; Inputs: None
-; Outputs: 
-;    - Sprites color is changed to red
+; Outputs: None
 CHECK_COLLISION
         lda $D01F
         and #$01
@@ -171,6 +170,10 @@ CHECK_COLLISION
 
         rts
 
+; Description: When a collision is detected between the cat sprite and the background text. It changes the cat sprite's color to red (by modifying the VIC-II register $D027).
+; Inputs: None
+; Outputs: 
+;    - Sprites color is changed to red
 COLLISION_DETECTED
         lda #$02
         sta $D027

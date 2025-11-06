@@ -24,7 +24,7 @@
 00024  0900  A9 34                 LDA #<CLEAR_CHAR
 00025  0902  A0 0A                 LDY #>CLEAR_CHAR
 00026  0904  20 1E AB              JSR PRINTLINE
-00027  0907             ; START YOUR CODE HERE
+00027  0907                        ; START YOUR CODE HERE
 00028  0907             
 00029  0907                        ;COPPIES SPRITES DATA
 00030  0907  20 19 09              JSR COPY_CAT_SPRITE
@@ -68,327 +68,329 @@
 00068  093A             
 00069  093A  60                    RTS
 00070  093B             
-00071  093B             ; DESCRIPTION: COPY THE MUSHROOM SPRITE DATA TO THE SPRITE MEMORY LOCATION FOR SPRITE 1.
+00071  093B             ; DESCRIPTION: COPY THE MUSHROOM SPRITE DATA TO THE SPRITE MEMORY LOCATION FOR  BOTH MUSHROOM SPRITES.
 00072  093B             ; INPUTS: NONE
 00073  093B             ; OUTPUTS:
-00074  093B             ;    -PLACES THE MUSHROOM SPRITE IN MEMORY
-00075  093B             COPY_MUSHROOM_SPRITE 
-00076  093B  A2 00                 LDX #0
-00077  093D             COPY_MUSHROOM_LOOP 
-00078  093D  BD F3 0A              LDA MUSHROOM_SPRITE_DATA,X
-00079  0940  9D C0 2E              STA MUSHROOM_SPRITE_PIXELS,X
-00080  0943  9D 00 2F              STA MUSHROOM2_SPRITE_PIXELS,X
-00081  0946             
-00082  0946  E8                    INX
-00083  0947  E0 40                 CPX #64
-00084  0949  D0 F2                 BNE COPY_MUSHROOM_LOOP
-00085  094B             
-00086  094B                        ; DRAWS SPRITE 1
-00087  094B  A9 BB                 LDA #$BB
-00088  094D  8D F9 07              STA $07F9
-00089  0950  A9 07                 LDA #7
-00090  0952  8D 28 D0              STA $D028
-00091  0955  A9 69                 LDA #105
-00092  0957  8D 02 D0              STA $D002
-00093  095A  A9 C8                 LDA #200
-00094  095C  8D 03 D0              STA $D003
-00095  095F             
-00096  095F                        ; DRAWS SPRITE 2
-00097  095F  A9 BC                 LDA #$BC
-00098  0961  8D FA 07              STA $07FA
-00099  0964  A9 05                 LDA #5
-00100  0966  8D 29 D0              STA $D029
-00101  0969  A9 69                 LDA #105
-00102  096B  8D 04 D0              STA $D004
-00103  096E  A9 6E                 LDA #110
-00104  0970  8D 05 D0              STA $D005
-00105  0973  60                    RTS
-00106  0974             
-00107  0974             ; DESCRIPTION: IT CALLS THE INDIVIDUAL SUBROUTINES TO DRAW ROWS 5, 12, 17, AND 22.
-00108  0974             ; INPUTS: NONE
-00109  0974             ; OUTPUTS: NONE
-00110  0974             DRAW_TEXT_LINES 
-00111  0974  20 81 09              JSR DRAW_ROW5
-00112  0977  20 8F 09              JSR DRAW_ROW12
-00113  097A  20 9D 09              JSR DRAW_ROW17
-00114  097D  20 AB 09              JSR DRAW_ROW22
-00115  0980  60                    RTS
-00116  0981             
-00117  0981             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW5_DATA INTO ROW 5 OF THE SCREEN MEMORY.
-00118  0981             ; INPUTS:
-00119  0981             ;    -ROW5_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 5
-00120  0981             ; OUTPUTS:
-00121  0981             ;    -ROW5_DATA IS ADDED TO ADDRESS $04C8
-00122  0981             DRAW_ROW5
-00123  0981  A2 00                 LDX #0
-00124  0983             DRAW_ROW5_LOOP 
-00125  0983  BD 53 0A              LDA ROW5_DATA,X
-00126  0986  9D C8 04              STA $04C8,X
-00127  0989  E8                    INX
-00128  098A  E0 28                 CPX #40
-00129  098C  D0 F5                 BNE DRAW_ROW5_LOOP
-00130  098E  60                    RTS
-00131  098F             
-00132  098F             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW12_DATA INTO ROW 12 OF THE SCREEN MEMORY.
-00133  098F             ; INPUTS:
-00134  098F             ;    -ROW12_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 12
-00135  098F             ; OUTPUTS:
-00136  098F             ;    -ROW12_DATA IS ADDED TO ADDRESS $05E0
-00137  098F             DRAW_ROW12 
-00138  098F  A2 00                 LDX #0
-00139  0991             DRAW_ROW12_LOOP 
-00140  0991  BD 7B 0A              LDA ROW12_DATA,X
-00141  0994  9D E0 05              STA $05E0,X
-00142  0997  E8                    INX
-00143  0998  E0 28                 CPX #40
-00144  099A  D0 F5                 BNE DRAW_ROW12_LOOP
-00145  099C  60                    RTS
-00146  099D             
-00147  099D             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW17_DATA INTO ROW 17 OF THE SCREEN MEMORY.
-00148  099D             ; INPUTS:
-00149  099D             ;    -ROW17_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 17
-00150  099D             ; OUTPUTS:
-00151  099D             ;    -ROW17_DATA IS ADDED TO ADDRESS $06A8
-00152  099D             DRAW_ROW17 
-00153  099D  A2 00                 LDX #0
-00154  099F             DRAW_ROW17_LOOP 
-00155  099F  BD A3 0A              LDA ROW17_DATA,X
-00156  09A2  9D A8 06              STA $06A8,X
-00157  09A5  E8                    INX
-00158  09A6  E0 28                 CPX #40
-00159  09A8  D0 F5                 BNE DRAW_ROW17_LOOP
-00160  09AA  60                    RTS
-00161  09AB             
-00162  09AB             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW22_DATA INTO ROW 22 OF THE SCREEN MEMORY.
-00163  09AB             ; INPUTS:
-00164  09AB             ;    -ROW22_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 22
-00165  09AB             ; OUTPUTS:
-00166  09AB             ;    -ROW22_DATA IS ADDED TO ADDRESS $0770
-00167  09AB             DRAW_ROW22 
-00168  09AB  A2 00                 LDX #0
-00169  09AD             DRAW_ROW22_LOOP 
-00170  09AD  BD CB 0A              LDA ROW22_DATA,X
-00171  09B0  9D 70 07              STA $0770,X
-00172  09B3  E8                    INX
-00173  09B4  E0 28                 CPX #40
-00174  09B6  D0 F5                 BNE DRAW_ROW22_LOOP
-00175  09B8  60                    RTS
-00176  09B9             
-00177  09B9             ; DESCRIPTION: THIS SUBROUTINE CONTINUOUSLY MOVES THE CAT SPRITE DOWN THE SCREEN BY INCREMENTING ITS Y-COORDINATE.
-00178  09B9             ; INPUTS: NONE
-00179  09B9             ; OUTPUTS: UPDATES THE Y-COORDINATE OF THE CAT SPRITE TO MOVE IT DOWN.
-00180  09B9             MOVE_CAT
-00181  09B9             MOVE_LOOP
-00182  09B9  AD 01 D0              LDA $D001
-00183  09BC  18                    CLC
-00184  09BD  69 05                 ADC #5
-00185  09BF  8D 01 D0              STA $D001
-00186  09C2             
-00187  09C2  20 E3 09              JSR CHECK_COLLISION
-00188  09C5  20 38 0A              JSR WAIT_QUARTER_SECOND
-00189  09C8             
-00190  09C8  A9 00                 LDA #$00
-00191  09CA  8D 1E D0              STA $D01E
-00192  09CD  8D 1F D0              STA $D01F
-00193  09D0                        
-00194  09D0  AD 01 D0              LDA $D001
-00195  09D3  C9 F5                 CMP #245
-00196  09D5  90 E2                 BCC MOVE_LOOP
-00197  09D7             
-00198  09D7  A9 20                 LDA #$20
-00199  09D9  8D 01 D0              STA $D001
-00200  09DC  20 38 0A              JSR WAIT_QUARTER_SECOND
-00201  09DF  4C B9 09              JMP MOVE_LOOP
-00202  09E2  60                    RTS
-00203  09E3             
-00204  09E3             ; DESCRIPTION: CHECKS IF THE CAT SPRITE IS COLLIDING WITH THE BACKGROUND TEXT BASED ON THE VALUE FROM $D01F OR OTHER SPRITE BASED ON VALUE FROM $D01E.
-00205  09E3             ; INPUTS: NONE
-00206  09E3             ; OUTPUTS: NONE
-00207  09E3             CHECK_COLLISION 
-00208  09E3  AD 1F D0              LDA $D01F
-00209  09E6  29 01                 AND #$01
-00210  09E8  D0 06                 BNE COLLISION_DETECTED
-00211  09EA             
-00212  09EA  A9 01                 LDA #$01
-00213  09EC  8D 27 D0              STA $D027
-00214  09EF  60                    RTS
-00215  09F0             
-00216  09F0             ; DESCRIPTION: WHEN A COLLISION IS DETECTED BETWEEN THE CAT SPRITE AND ANOTHER OBJECT. IT CHANGES THE CAT SPRITE'S COLOR TO RED.
-00217  09F0             ; INPUTS: NONE
-00218  09F0             ; OUTPUTS:
-00219  09F0             ;    - SPRITES COLOR IS CHANGED TO RED
-00220  09F0             COLLISION_DETECTED 
-00221  09F0  AD 1E D0              LDA $D01E
-00222  09F3  29 03                 AND #$03
-00223  09F5  D0 06                 BNE COLLISION_WITH_MUSHROOM
-00224  09F7             
-00225  09F7  A9 02                 LDA #$02
-00226  09F9  8D 27 D0              STA $D027
-00227  09FC  60                    RTS
-00228  09FD             
-00229  09FD             ; DESCRIPTION: WHEN A COLLISION IS DETECTED BETWEEN THE CAT SPRITE AND ANOTHER SPRITE, DISABLES THE COLLIDED SPRITE AND CHECKS IF IT IS THE LAST MUSHROOM.
-00230  09FD             ; INPUTS: NONE
-00231  09FD             ; OUTPUTS:
-00232  09FD             ;    - UPDATES SPRITE ENABLE REGISTER ($D015)
-00233  09FD             ;    - CALLS COLLISION_WITH_LAST_MUSHROOM IF LAST SPRITE
-00234  09FD             COLLISION_WITH_MUSHROOM 
-00235  09FD  AD 15 D0              LDA $D015
-00236  0A00  4A                    LSR
-00237  0A01  8D 15 D0              STA $D015
-00238  0A04             
-00239  0A04  AD 15 D0              LDA $D015
-00240  0A07  C9 01                 CMP #%00000001
-00241  0A09  F0 01                 BEQ COLLISION_WITH_LAST_MUSHROOM
-00242  0A0B             
-00243  0A0B  60                    RTS
-00244  0A0C             
-00245  0A0C             ; DESCRIPTION: HANDLES THE LAST MUSHROOM COLLISION. UPDATES ITS ENABLE BIT AND MOVES IT TO A NEW Y POSITION USING NOT(CURRENT_Y) <<< 1.
-00246  0A0C             ; INPUTS:
-00247  0A0C             ;    - USES THE CAT SPRITES Y VALUE ON SCREEN ($D001)
-00248  0A0C             ; OUTPUTS:
-00249  0A0C             ;    - UPDATES SPRITE ENABLE REGISTER ($D015)
-00250  0A0C             ;    - SPRITE Y POSITION UPDATED ($D003)
-00251  0A0C             COLLISION_WITH_LAST_MUSHROOM 
-00252  0A0C  38                    SEC
-00253  0A0D  AD 15 D0              LDA $D015
-00254  0A10  2A                    ROL
-00255  0A11  8D 15 D0              STA $D015
-00256  0A14             
-00257  0A14  20 21 0A              JSR UPDATE_MUSHROOM_COLOR
-00258  0A17             
-00259  0A17  AD 01 D0              LDA $D001
-00260  0A1A  49 FF                 EOR #$FF
-00261  0A1C  0A                    ASL
-00262  0A1D  8D 03 D0              STA $D003
-00263  0A20             
-00264  0A20  60                    RTS
-00265  0A21             
-00266  0A21             ; DESCRIPTION: UPDATES THE MUSHROOM COLOR. ENSURES IT NEVER BECOMES 6 (BACKGROUND COLOR).
-00267  0A21             ; INPUTS:
-00268  0A21             ;    - USES SPRITE 2 COLOR ($D028)
-00269  0A21             ; OUTPUTS:
-00270  0A21             ;    - UPDATES SPRITE 2 COLOR ($D028)
-00271  0A21             UPDATE_MUSHROOM_COLOR 
-00272  0A21  AD 28 D0              LDA $D028
-00273  0A24  C9 05                 CMP #5
-00274  0A26  F0 06                 BEQ SKIP_COLOR_SIX
-00275  0A28             
-00276  0A28  69 01                 ADC #1
-00277  0A2A  8D 28 D0              STA $D028
-00278  0A2D  60                    RTS
-00279  0A2E             
-00280  0A2E             ; DESCRIPTION: UPDATES THE MUSHROOM COLOR TO VALUE 7.
-00281  0A2E             ; INPUTS: NONE
-00282  0A2E             ; OUTPUTS:
-00283  0A2E             ;    - UPDATES SPRITE 2 COLOR ($D028)
-00284  0A2E             SKIP_COLOR_SIX 
-00285  0A2E  A9 07                 LDA #7
-00286  0A30  8D 28 D0              STA $D028
-00287  0A33  60                    RTS
-00288  0A34             
-00289  0A34             ; PLEASE DON'T CHANGE ANYTHING AFTER THIS LINE.
-00290  0A34             ; BAD STUFF WILL HAPPEN
-00291  0A34             CLEAR_CHAR 
-00292  0A34                        ; THE CLEARSCREEN CHARACTER
-00293  0A34  93                    BYTE 147
-00294  0A35                        ; CARRIAGE RETURN & TERMINATE THE STRING
-00295  0A35  0D 00                 BYTE 13, 00
-00296  0A37             
-00297  0A37             
-00298  0A37             ; INTERNAL VARIABLE FOR WAIT
-00299  0A37  00         JIFFY_COUNTER BYTE 00
-00300  0A38             
-00301  0A38             ; PAUSES THE PROGRAM FOR APPROXIMATELY 1 SECOND
-00302  0A38             WAIT_QUARTER_SECOND 
-00303  0A38                        ; SAVE STACK
-00304  0A38  08                    PHP
-00305  0A39  48                    PHA
-00306  0A3A  8A                    TXA
-00307  0A3B  48                    PHA
-00308  0A3C  98                    TYA
-00309  0A3D  48                    PHA
-00310  0A3E             
-00311  0A3E             ; COUNT UP ONE QUARTER SECOND
-00312  0A3E  A5 A2                 LDA $A2
-00313  0A40  69 0F                 ADC #15
-00314  0A42  8D 37 0A              STA JIFFY_COUNTER
-00315  0A45             
-00316  0A45             COUNT_JIFFIES_LOOP 
-00317  0A45  A5 A2                 LDA $A2
-00318  0A47  CD 37 0A              CMP JIFFY_COUNTER
-00319  0A4A  D0 F9                 BNE COUNT_JIFFIES_LOOP
-00320  0A4C             
-00321  0A4C             
-00322  0A4C             ; REPAIR REGISTER STATE
-00323  0A4C  68                    PLA
-00324  0A4D  A8                    TAY
-00325  0A4E  68                    PLA
-00326  0A4F  AA                    TAX
-00327  0A50  68                    PLA
-00328  0A51  28                    PLP
-00329  0A52             
-00330  0A52  60                    RTS
-00331  0A53             
-00332  0A53             
-00333  0A53             ; SCREEN 1 -  SCREEN DATA
-00334  0A53             ROW5_DATA
-00335  0A53  7F 7F 7F              BYTE    $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F
-00336  0A7B             ROW12_DATA 
-00337  0A7B  53 53 53              BYTE    $53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53
-00338  0AA3             ROW17_DATA 
-00339  0AA3  3D 3D 3D              BYTE    $3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D
-00340  0ACB             ROW22_DATA 
-00341  0ACB  5F 5F 5F              BYTE    $5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F
-00342  0AF3             
-00343  0AF3             ; SPRITE DATA
-00344  0AF3             MUSHROOM_SPRITE_DATA 
-00345  0AF3  07 FF E0              BYTE $07,$FF,$E0
-00346  0AF6  0F FF F0              BYTE $0F,$FF,$F0
-00347  0AF9  19 80 18              BYTE $19,$80,$18
-00348  0AFC  30 31 8C              BYTE $30,$31,$8C
-00349  0AFF  60 31 86              BYTE $60,$31,$86
-00350  0B02  63 00 06              BYTE $63,$00,$06
-00351  0B05  E3 06 07              BYTE $E3,$06,$07
-00352  0B08  C0 06 63              BYTE $C0,$06,$63
-00353  0B0B  CC 30 63              BYTE $CC,$30,$63
-00354  0B0E  CC 30 03              BYTE $CC,$30,$03
-00355  0B11  C1 86 1B              BYTE $C1,$86,$1B
-00356  0B14  7F FF FE              BYTE $7F,$FF,$FE
-00357  0B17  1F FF F8              BYTE $1F,$FF,$F8
-00358  0B1A  08 00 08              BYTE $08,$00,$08
-00359  0B1D  08 C3 08              BYTE $08,$C3,$08
-00360  0B20  08 00 08              BYTE $08,$00,$08
-00361  0B23  08 00 08              BYTE $08,$00,$08
-00362  0B26  08 42 08              BYTE $08,$42,$08
-00363  0B29  08 3C 08              BYTE $08,$3C,$08
-00364  0B2C  0C 00 18              BYTE $0C,$00,$18
-00365  0B2F  07 FF F0              BYTE $07,$FF,$F0
-00366  0B32  00                    BYTE $00
-00367  0B33             
-00368  0B33             CAT_SPRITE_DATA 
-00369  0B33  70 00 0E              BYTE $70,$00,$0E
-00370  0B36  8C 00 31              BYTE $8C,$00,$31
-00371  0B39  B2 00 4D              BYTE $B2,$00,$4D
-00372  0B3C  BB 00 DD              BYTE $BB,$00,$DD
-00373  0B3F  B9 FF 9D              BYTE $B9,$FF,$9D
-00374  0B42  B7 FF ED              BYTE $B7,$FF,$ED
-00375  0B45  AF FF F5              BYTE $AF,$FF,$F5
-00376  0B48  9F 7E F9              BYTE $9F,$7E,$F9
-00377  0B4B  7E BD 7E              BYTE $7E,$BD,$7E
-00378  0B4E  3D DB BC              BYTE $3D,$DB,$BC
-00379  0B51  7F FF FF              BYTE $7F,$FF,$FF
-00380  0B54  FF FF FF              BYTE $FF,$FF,$FF
-00381  0B57  FF E7 FF              BYTE $FF,$E7,$FF
-00382  0B5A  FF FF FF              BYTE $FF,$FF,$FF
-00383  0B5D  FF FF FF              BYTE $FF,$FF,$FF
-00384  0B60  FF 7E FF              BYTE $FF,$7E,$FF
-00385  0B63  FF BD FF              BYTE $FF,$BD,$FF
-00386  0B66  FF DB FF              BYTE $FF,$DB,$FF
-00387  0B69  7F E7 FE              BYTE $7F,$E7,$FE
-00388  0B6C  3F FF FC              BYTE $3F,$FF,$FC
-00389  0B6F  0F FF F8              BYTE $0F,$FF,$F8
-00390  0B72  00                    BYTE $00
-00391  0B73             
+00074  093B             ;    -PLACES THE MUSHROOM 1 SPRITE IN MEMORY
+00075  093B             ;    -PLACES THE MUSHROOM 2 SPRITE IN MEMORY
+00076  093B             COPY_MUSHROOM_SPRITE 
+00077  093B  A2 00                 LDX #0
+00078  093D             COPY_MUSHROOM_LOOP 
+00079  093D  BD F3 0A              LDA MUSHROOM_SPRITE_DATA,X
+00080  0940  9D C0 2E              STA MUSHROOM_SPRITE_PIXELS,X
+00081  0943  9D 00 2F              STA MUSHROOM2_SPRITE_PIXELS,X
+00082  0946             
+00083  0946  E8                    INX
+00084  0947  E0 40                 CPX #64
+00085  0949  D0 F2                 BNE COPY_MUSHROOM_LOOP
+00086  094B             
+00087  094B                        ; ALTERS SPRITE DATA AND POINTER
+00088  094B  A9 BB                 LDA #$BB
+00089  094D  8D F9 07              STA $07F9
+00090  0950  A9 07                 LDA #7
+00091  0952  8D 28 D0              STA $D028
+00092  0955  A9 69                 LDA #105
+00093  0957  8D 02 D0              STA $D002
+00094  095A  A9 C8                 LDA #200
+00095  095C  8D 03 D0              STA $D003
+00096  095F             
+00097  095F                        ; ALTERS SPRITE DATA AND POINTER
+00098  095F  A9 BC                 LDA #$BC
+00099  0961  8D FA 07              STA $07FA
+00100  0964  A9 05                 LDA #5
+00101  0966  8D 29 D0              STA $D029
+00102  0969  A9 69                 LDA #105
+00103  096B  8D 04 D0              STA $D004
+00104  096E  A9 6E                 LDA #110
+00105  0970  8D 05 D0              STA $D005
+00106  0973  60                    RTS
+00107  0974             
+00108  0974             ; DESCRIPTION: IT CALLS THE INDIVIDUAL SUBROUTINES TO DRAW ROWS 5, 12, 17, AND 22.
+00109  0974             ; INPUTS: NONE
+00110  0974             ; OUTPUTS: NONE
+00111  0974             DRAW_TEXT_LINES 
+00112  0974  20 81 09              JSR DRAW_ROW5
+00113  0977  20 8F 09              JSR DRAW_ROW12
+00114  097A  20 9D 09              JSR DRAW_ROW17
+00115  097D  20 AB 09              JSR DRAW_ROW22
+00116  0980  60                    RTS
+00117  0981             
+00118  0981             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW5_DATA INTO ROW 5 OF THE SCREEN MEMORY.
+00119  0981             ; INPUTS:
+00120  0981             ;    -ROW5_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 5
+00121  0981             ; OUTPUTS:
+00122  0981             ;    -ROW5_DATA IS ADDED TO ADDRESS $04C8
+00123  0981             DRAW_ROW5
+00124  0981  A2 00                 LDX #0
+00125  0983             DRAW_ROW5_LOOP 
+00126  0983  BD 53 0A              LDA ROW5_DATA,X
+00127  0986  9D C8 04              STA $04C8,X
+00128  0989  E8                    INX
+00129  098A  E0 28                 CPX #40
+00130  098C  D0 F5                 BNE DRAW_ROW5_LOOP
+00131  098E  60                    RTS
+00132  098F             
+00133  098F             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW12_DATA INTO ROW 12 OF THE SCREEN MEMORY.
+00134  098F             ; INPUTS:
+00135  098F             ;    -ROW12_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 12
+00136  098F             ; OUTPUTS:
+00137  098F             ;    -ROW12_DATA IS ADDED TO ADDRESS $05E0
+00138  098F             DRAW_ROW12 
+00139  098F  A2 00                 LDX #0
+00140  0991             DRAW_ROW12_LOOP 
+00141  0991  BD 7B 0A              LDA ROW12_DATA,X
+00142  0994  9D E0 05              STA $05E0,X
+00143  0997  E8                    INX
+00144  0998  E0 28                 CPX #40
+00145  099A  D0 F5                 BNE DRAW_ROW12_LOOP
+00146  099C  60                    RTS
+00147  099D             
+00148  099D             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW17_DATA INTO ROW 17 OF THE SCREEN MEMORY.
+00149  099D             ; INPUTS:
+00150  099D             ;    -ROW17_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 17
+00151  099D             ; OUTPUTS:
+00152  099D             ;    -ROW17_DATA IS ADDED TO ADDRESS $06A8
+00153  099D             DRAW_ROW17 
+00154  099D  A2 00                 LDX #0
+00155  099F             DRAW_ROW17_LOOP 
+00156  099F  BD A3 0A              LDA ROW17_DATA,X
+00157  09A2  9D A8 06              STA $06A8,X
+00158  09A5  E8                    INX
+00159  09A6  E0 28                 CPX #40
+00160  09A8  D0 F5                 BNE DRAW_ROW17_LOOP
+00161  09AA  60                    RTS
+00162  09AB             
+00163  09AB             ; DESCRIPTION: THIS SUBROUTINE DRAWS THE DATA FROM ROW22_DATA INTO ROW 22 OF THE SCREEN MEMORY.
+00164  09AB             ; INPUTS:
+00165  09AB             ;    -ROW22_DATA - THE CHARACTER DATA TO BE DISPLAYED IN ROW 22
+00166  09AB             ; OUTPUTS:
+00167  09AB             ;    -ROW22_DATA IS ADDED TO ADDRESS $0770
+00168  09AB             DRAW_ROW22 
+00169  09AB  A2 00                 LDX #0
+00170  09AD             DRAW_ROW22_LOOP 
+00171  09AD  BD CB 0A              LDA ROW22_DATA,X
+00172  09B0  9D 70 07              STA $0770,X
+00173  09B3  E8                    INX
+00174  09B4  E0 28                 CPX #40
+00175  09B6  D0 F5                 BNE DRAW_ROW22_LOOP
+00176  09B8  60                    RTS
+00177  09B9             
+00178  09B9             ; DESCRIPTION: THIS SUBROUTINE CONTINUOUSLY MOVES THE CAT SPRITE DOWN THE SCREEN BY INCREMENTING ITS Y-COORDINATE.
+00179  09B9             ; INPUTS: NONE
+00180  09B9             ; OUTPUTS: UPDATES THE Y-COORDINATE OF THE CAT SPRITE TO MOVE IT DOWN.
+00181  09B9             MOVE_CAT
+00182  09B9             MOVE_LOOP
+00183  09B9  AD 01 D0              LDA $D001
+00184  09BC  18                    CLC
+00185  09BD  69 05                 ADC #5
+00186  09BF  8D 01 D0              STA $D001
+00187  09C2             
+00188  09C2  20 E3 09              JSR CHECK_COLLISION
+00189  09C5  20 38 0A              JSR WAIT_QUARTER_SECOND
+00190  09C8             
+00191  09C8  A9 00                 LDA #$00
+00192  09CA  8D 1E D0              STA $D01E
+00193  09CD  8D 1F D0              STA $D01F
+00194  09D0                        
+00195  09D0  AD 01 D0              LDA $D001
+00196  09D3  C9 F5                 CMP #245
+00197  09D5  90 E2                 BCC MOVE_LOOP
+00198  09D7             
+00199  09D7  A9 20                 LDA #$20
+00200  09D9  8D 01 D0              STA $D001
+00201  09DC  20 38 0A              JSR WAIT_QUARTER_SECOND
+00202  09DF  4C B9 09              JMP MOVE_LOOP
+00203  09E2  60                    RTS
+00204  09E3             
+00205  09E3             ; DESCRIPTION: CHECKS IF THE CAT SPRITE IS COLLIDING WITH THE BACKGROUND TEXT BASED ON THE VALUE FROM $D01F OR OTHER SPRITE BASED ON VALUE FROM $D01E.
+00206  09E3             ; INPUTS: NONE
+00207  09E3             ; OUTPUTS: NONE
+00208  09E3             CHECK_COLLISION 
+00209  09E3  AD 1F D0              LDA $D01F
+00210  09E6  29 01                 AND #$01
+00211  09E8  D0 06                 BNE COLLISION_DETECTED
+00212  09EA             
+00213  09EA  A9 01                 LDA #$01
+00214  09EC  8D 27 D0              STA $D027
+00215  09EF  60                    RTS
+00216  09F0             
+00217  09F0             ; DESCRIPTION: WHEN A COLLISION IS DETECTED BETWEEN THE CAT SPRITE AND ANOTHER OBJECT. IT CHANGES THE CAT SPRITE'S COLOR TO RED.
+00218  09F0             ; INPUTS: NONE
+00219  09F0             ; OUTPUTS:
+00220  09F0             ;    - SPRITES COLOR IS CHANGED TO RED
+00221  09F0             COLLISION_DETECTED 
+00222  09F0  AD 1E D0              LDA $D01E
+00223  09F3  29 03                 AND #$03
+00224  09F5  D0 06                 BNE COLLISION_WITH_MUSHROOM
+00225  09F7             
+00226  09F7  A9 02                 LDA #$02
+00227  09F9  8D 27 D0              STA $D027
+00228  09FC  60                    RTS
+00229  09FD             
+00230  09FD             ; DESCRIPTION: WHEN A COLLISION IS DETECTED BETWEEN THE CAT SPRITE AND ANOTHER SPRITE, DISABLES THE COLLIDED SPRITE AND CHECKS IF IT IS THE LAST MUSHROOM.
+00231  09FD             ; INPUTS: NONE
+00232  09FD             ; OUTPUTS:
+00233  09FD             ;    - UPDATES SPRITE ENABLE REGISTER ($D015)
+00234  09FD             ;    - CALLS COLLISION_WITH_LAST_MUSHROOM IF LAST SPRITE
+00235  09FD             COLLISION_WITH_MUSHROOM 
+00236  09FD  AD 15 D0              LDA $D015
+00237  0A00  4A                    LSR
+00238  0A01  8D 15 D0              STA $D015
+00239  0A04             
+00240  0A04  AD 15 D0              LDA $D015
+00241  0A07  C9 01                 CMP #$01
+00242  0A09  F0 01                 BEQ COLLISION_WITH_LAST_MUSHROOM
+00243  0A0B             
+00244  0A0B  60                    RTS
+00245  0A0C             
+00246  0A0C             ; DESCRIPTION: HANDLES THE LAST MUSHROOM COLLISION. UPDATES ITS ENABLE BIT AND MOVES IT TO A NEW Y POSITION USING NOT(CURRENT_Y) <<< 1.
+00247  0A0C             ; INPUTS:
+00248  0A0C             ;    - USES THE CAT SPRITES Y VALUE ON SCREEN ($D001)
+00249  0A0C             ; OUTPUTS:
+00250  0A0C             ;    - UPDATES SPRITE ENABLE REGISTER ($D015)
+00251  0A0C             ;    - SPRITE Y POSITION UPDATED ($D003)
+00252  0A0C             COLLISION_WITH_LAST_MUSHROOM 
+00253  0A0C  38                    SEC
+00254  0A0D  AD 15 D0              LDA $D015
+00255  0A10  2A                    ROL
+00256  0A11  8D 15 D0              STA $D015
+00257  0A14             
+00258  0A14  20 21 0A              JSR UPDATE_MUSHROOM_COLOR
+00259  0A17             
+00260  0A17  AD 01 D0              LDA $D001
+00261  0A1A  49 FF                 EOR #$FF
+00262  0A1C  0A                    ASL
+00263  0A1D  8D 03 D0              STA $D003
+00264  0A20             
+00265  0A20  60                    RTS
+00266  0A21             
+00267  0A21             ; DESCRIPTION: UPDATES THE MUSHROOM COLOR. ENSURES IT NEVER BECOMES 6 (BACKGROUND COLOR).
+00268  0A21             ; INPUTS:
+00269  0A21             ;    - USES SPRITE COLOR ($D028)
+00270  0A21             ; OUTPUTS:
+00271  0A21             ;    - UPDATES SPRITE COLOR ($D028)
+00272  0A21             UPDATE_MUSHROOM_COLOR 
+00273  0A21  AD 28 D0              LDA $D028
+00274  0A24  C9 05                 CMP #5
+00275  0A26  F0 06                 BEQ SKIP_COLOR6
+00276  0A28             
+00277  0A28  69 01                 ADC #1
+00278  0A2A  8D 28 D0              STA $D028
+00279  0A2D  60                    RTS
+00280  0A2E             
+00281  0A2E             ; DESCRIPTION: UPDATES THE MUSHROOM COLOR TO VALUE 7.
+00282  0A2E             ; INPUTS: NONE
+00283  0A2E             ; OUTPUTS:
+00284  0A2E             ;    - UPDATES SPRITE COLOR ($D028)
+00285  0A2E             SKIP_COLOR6 
+00286  0A2E  A9 07                 LDA #7
+00287  0A30  8D 28 D0              STA $D028
+00288  0A33  60                    RTS
+00289  0A34             
+00290  0A34             
+00291  0A34             ; PLEASE DON'T CHANGE ANYTHING AFTER THIS LINE.
+00292  0A34             ; BAD STUFF WILL HAPPEN
+00293  0A34             CLEAR_CHAR 
+00294  0A34                        ; THE CLEARSCREEN CHARACTER
+00295  0A34  93                    BYTE 147
+00296  0A35                        ; CARRIAGE RETURN & TERMINATE THE STRING
+00297  0A35  0D 00                 BYTE 13, 00
+00298  0A37             
+00299  0A37             
+00300  0A37             ; INTERNAL VARIABLE FOR WAIT
+00301  0A37  00         JIFFY_COUNTER BYTE 00
+00302  0A38             
+00303  0A38             ; PAUSES THE PROGRAM FOR APPROXIMATELY 1 SECOND
+00304  0A38             WAIT_QUARTER_SECOND 
+00305  0A38                        ; SAVE STACK
+00306  0A38  08                    PHP
+00307  0A39  48                    PHA
+00308  0A3A  8A                    TXA
+00309  0A3B  48                    PHA
+00310  0A3C  98                    TYA
+00311  0A3D  48                    PHA
+00312  0A3E             
+00313  0A3E             ; COUNT UP ONE QUARTER SECOND
+00314  0A3E  A5 A2                 LDA $A2
+00315  0A40  69 0F                 ADC #15
+00316  0A42  8D 37 0A              STA JIFFY_COUNTER
+00317  0A45             
+00318  0A45             COUNT_JIFFIES_LOOP 
+00319  0A45  A5 A2                 LDA $A2
+00320  0A47  CD 37 0A              CMP JIFFY_COUNTER
+00321  0A4A  D0 F9                 BNE COUNT_JIFFIES_LOOP
+00322  0A4C             
+00323  0A4C             
+00324  0A4C             ; REPAIR REGISTER STATE
+00325  0A4C  68                    PLA
+00326  0A4D  A8                    TAY
+00327  0A4E  68                    PLA
+00328  0A4F  AA                    TAX
+00329  0A50  68                    PLA
+00330  0A51  28                    PLP
+00331  0A52             
+00332  0A52  60                    RTS
+00333  0A53             
+00334  0A53             
+00335  0A53             ; SCREEN 1 -  SCREEN DATA
+00336  0A53             ROW5_DATA
+00337  0A53  7F 7F 7F              BYTE    $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F
+00338  0A7B             ROW12_DATA 
+00339  0A7B  53 53 53              BYTE    $53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53,$53
+00340  0AA3             ROW17_DATA 
+00341  0AA3  3D 3D 3D              BYTE    $3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D,$3D
+00342  0ACB             ROW22_DATA 
+00343  0ACB  5F 5F 5F              BYTE    $5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F
+00344  0AF3             
+00345  0AF3             ; SPRITE DATA
+00346  0AF3             MUSHROOM_SPRITE_DATA 
+00347  0AF3  07 FF E0              BYTE $07,$FF,$E0
+00348  0AF6  0F FF F0              BYTE $0F,$FF,$F0
+00349  0AF9  19 80 18              BYTE $19,$80,$18
+00350  0AFC  30 31 8C              BYTE $30,$31,$8C
+00351  0AFF  60 31 86              BYTE $60,$31,$86
+00352  0B02  63 00 06              BYTE $63,$00,$06
+00353  0B05  E3 06 07              BYTE $E3,$06,$07
+00354  0B08  C0 06 63              BYTE $C0,$06,$63
+00355  0B0B  CC 30 63              BYTE $CC,$30,$63
+00356  0B0E  CC 30 03              BYTE $CC,$30,$03
+00357  0B11  C1 86 1B              BYTE $C1,$86,$1B
+00358  0B14  7F FF FE              BYTE $7F,$FF,$FE
+00359  0B17  1F FF F8              BYTE $1F,$FF,$F8
+00360  0B1A  08 00 08              BYTE $08,$00,$08
+00361  0B1D  08 C3 08              BYTE $08,$C3,$08
+00362  0B20  08 00 08              BYTE $08,$00,$08
+00363  0B23  08 00 08              BYTE $08,$00,$08
+00364  0B26  08 42 08              BYTE $08,$42,$08
+00365  0B29  08 3C 08              BYTE $08,$3C,$08
+00366  0B2C  0C 00 18              BYTE $0C,$00,$18
+00367  0B2F  07 FF F0              BYTE $07,$FF,$F0
+00368  0B32  00                    BYTE $00
+00369  0B33             
+00370  0B33             CAT_SPRITE_DATA 
+00371  0B33  70 00 0E              BYTE $70,$00,$0E
+00372  0B36  8C 00 31              BYTE $8C,$00,$31
+00373  0B39  B2 00 4D              BYTE $B2,$00,$4D
+00374  0B3C  BB 00 DD              BYTE $BB,$00,$DD
+00375  0B3F  B9 FF 9D              BYTE $B9,$FF,$9D
+00376  0B42  B7 FF ED              BYTE $B7,$FF,$ED
+00377  0B45  AF FF F5              BYTE $AF,$FF,$F5
+00378  0B48  9F 7E F9              BYTE $9F,$7E,$F9
+00379  0B4B  7E BD 7E              BYTE $7E,$BD,$7E
+00380  0B4E  3D DB BC              BYTE $3D,$DB,$BC
+00381  0B51  7F FF FF              BYTE $7F,$FF,$FF
+00382  0B54  FF FF FF              BYTE $FF,$FF,$FF
+00383  0B57  FF E7 FF              BYTE $FF,$E7,$FF
+00384  0B5A  FF FF FF              BYTE $FF,$FF,$FF
+00385  0B5D  FF FF FF              BYTE $FF,$FF,$FF
+00386  0B60  FF 7E FF              BYTE $FF,$7E,$FF
+00387  0B63  FF BD FF              BYTE $FF,$BD,$FF
+00388  0B66  FF DB FF              BYTE $FF,$DB,$FF
+00389  0B69  7F E7 FE              BYTE $7F,$E7,$FE
+00390  0B6C  3F FF FC              BYTE $3F,$FF,$FC
+00391  0B6F  0F FF F8              BYTE $0F,$FF,$F8
+00392  0B72  00                    BYTE $00
+00393  0B73             
 
 ******* 33 Label(s) *******
 CAT_SPRITE_DATA = $0B33 
@@ -421,7 +423,7 @@ ROW12_DATA = $0A7B
 ROW17_DATA = $0AA3 
 ROW22_DATA = $0ACB 
 ROW5_DATA = $0A53 
-SKIP_COLOR_SIX = $0A2E 
+SKIP_COLOR6 = $0A2E 
 UPDATE_MUSHROOM_COLOR = $0A21 
 WAIT_QUARTER_SECOND = $0A38 
 

@@ -26,7 +26,7 @@ PROGRAM_START
         lda #<CLEAR_CHAR
         ldy #>CLEAR_CHAR
         jsr PRINTLINE
-; start your code here
+        ; start your code here
 
         ;Coppies Sprites Data
         jsr COPY_CAT_SPRITE
@@ -70,10 +70,11 @@ COPY_LOOP
 
         rts
 
-; Description: Copy the mushroom sprite data to the sprite memory location for sprite 1.
+; Description: Copy the mushroom sprite data to the sprite memory location for  both mushroom sprites.
 ; Inputs: None
 ; Outputs: 
-;    -Places the mushroom sprite in memory
+;    -Places the mushroom 1 sprite in memory
+;    -Places the mushroom 2 sprite in memory
 COPY_MUSHROOM_SPRITE
         ldx #0
 COPY_MUSHROOM_LOOP
@@ -85,7 +86,7 @@ COPY_MUSHROOM_LOOP
         cpx #64
         bne COPY_MUSHROOM_LOOP
 
-        ; Draws Sprite 1
+        ; Alters Sprite Data and pointer
         lda #$BB
         sta $07F9
         lda #7
@@ -95,7 +96,7 @@ COPY_MUSHROOM_LOOP
         lda #200
         sta $D003
 
-        ; Draws Sprite 2
+        ; Alters Sprite Data and pointer
         lda #$BC
         sta $07FA
         lda #5
@@ -239,7 +240,7 @@ COLLISION_WITH_MUSHROOM
         sta $D015
 
         lda $D015
-        cmp #%00000001
+        cmp #$01
         beq COLLISION_WITH_LAST_MUSHROOM
 
         rts
@@ -267,13 +268,13 @@ COLLISION_WITH_LAST_MUSHROOM
 
 ; Description: Updates the mushroom color. Ensures it never becomes 6 (background color).
 ; Inputs:
-;    - Uses sprite 2 color ($D028)
+;    - Uses sprite color ($D028)
 ; Outputs:
-;    - Updates sprite 2 color ($D028)
+;    - Updates sprite color ($D028)
 UPDATE_MUSHROOM_COLOR
         lda $D028
         cmp #5
-        beq SKIP_COLOR_SIX
+        beq SKIP_COLOR6
 
         adc #1
         sta $D028
@@ -282,11 +283,12 @@ UPDATE_MUSHROOM_COLOR
 ; Description: Updates the mushroom color to value 7.
 ; Inputs: none
 ; Outputs:
-;    - Updates sprite 2 color ($D028)
-SKIP_COLOR_SIX
+;    - Updates sprite color ($D028)
+SKIP_COLOR6
         lda #7
         sta $D028
         rts
+
 
 ; please don't change anything after this line.
 ; bad stuff will happen

@@ -1,3 +1,8 @@
+; ============================
+; Author: Jacob Baker
+; Version: Fall 2025
+; ============================
+
 ; 10 SYS (2304)
 
 *=$0801
@@ -8,6 +13,8 @@
 
 CAT_SPRITE_PIXELS=$2E80
 MUSHROOM_SPRITE_PIXELS=CAT_SPRITE_PIXELS+64
+MUSHROOM2_SPRITE_PIXELS = MUSHROOM_SPRITE_PIXELS + 64
+
 
 ; address of the PRINTLINE routine in the kernel
 PRINTLINE=$AB1E
@@ -18,10 +25,252 @@ PROGRAM_START
         ldy #>CLEAR_CHAR
         jsr PRINTLINE
 ; start your code here
-        
 
+        ;Coppies Sprites Data
+        jsr COPY_CAT_SPRITE
+        jsr COPY_MUSHROOM_SPRITE
+
+        ; Enable sprites
+        lda #%00000111
+        sta $D015 
+
+        ; Creates Rows of Data
+        jsr DRAW_TEXT_LINES
+
+        ;Controls the Sprites
+        jsr MOVE_CAT
+        
 program_exit
         rts
+
+; Description: Copy the cat sprite data from CAT_SPRITE_DATA to the sprite memory location defined by CAT_SPRITE_PIXELS.
+; Inputs:     
+;    -CAT_SPRITE_DATA - starting address of the cat sprite bytes
+; Outputs:    
+;    -CAT_SPRITE_PIXELS - memory location where the cat sprite bytes are copied
+COPY_CAT_SPRITE
+        ldx #0
+COPY_LOOP
+        lda CAT_SPRITE_DATA,x
+        sta CAT_SPRITE_PIXELS,x
+        inx
+        cpx #64
+        bne COPY_LOOP
+        lda #$BA
+        sta $07F8
+        lda #1
+
+        sta $D027
+        lda #100
+        sta $D000
+        lda #50
+        sta $D001
+
+        rts
+
+; Description: Copy the mushroom sprite data to the sprite memory location for sprite 1.
+; Inputs: None
+; Outputs: 
+;    -Places the mushroom sprite in memory
+COPY_MUSHROOM_SPRITE
+        ldx #0
+COPY_MUSHROOM_LOOP
+        lda MUSHROOM_SPRITE_DATA,x
+        sta MUSHROOM_SPRITE_PIXELS,x
+        lda MUSHROOM_SPRITE_DATA,x
+        sta MUSHROOM2_SPRITE_PIXELS,x
+
+        inx
+        cpx #64
+        bne COPY_MUSHROOM_LOOP
+
+        ; Draws Sprite 1
+        lda #$BB
+        sta $07F9
+        lda #5
+        sta $D028
+        lda #105
+        sta $D002
+        lda #110
+        sta $D003
+
+        ; Draws Sprite 2
+        lda #$BC
+        sta $07FA
+        lda #5
+        sta $D029
+        lda #105
+        sta $D004
+        lda #190
+        sta $D005
+        rts
+
+; Description: It calls the individual subroutines to draw rows 5, 12, 17, and 22.
+; Inputs: None
+; Outputs: None
+DRAW_TEXT_LINES
+        jsr DRAW_ROW5
+        jsr DRAW_ROW12
+        jsr DRAW_ROW17
+        jsr DRAW_ROW22
+        rts
+
+; Description: This subroutine draws the data from ROW5_DATA into row 5 of the screen memory.
+; Inputs: 
+;    -ROW5_DATA - the character data to be displayed in row 5
+; Outputs: 
+;    -ROW5_DATA is added to address $04C8
+DRAW_ROW5
+        ldx #0
+DRAW_ROW5_LOOP
+        lda ROW5_DATA,x
+        sta $04C8,x
+        inx
+        cpx #40
+        bne DRAW_ROW5_LOOP
+        rts
+
+; Description: This subroutine draws the data from ROW12_DATA into row 12 of the screen memory.
+; Inputs: 
+;    -ROW12_DATA - the character data to be displayed in row 12
+; Outputs: 
+;    -ROW12_DATA is added to address $05E0
+DRAW_ROW12
+        ldx #0
+DRAW_ROW12_LOOP
+        lda ROW12_DATA,x
+        sta $05E0,x
+        inx
+        cpx #40
+        bne DRAW_ROW12_LOOP
+        rts
+
+; Description: This subroutine draws the data from ROW17_DATA into row 17 of the screen memory.
+; Inputs: 
+;    -ROW17_DATA - the character data to be displayed in row 17
+; Outputs: 
+;    -ROW17_DATA is added to address $06A8
+DRAW_ROW17
+        ldx #0
+DRAW_ROW17_LOOP
+        lda ROW17_DATA,x
+        sta $06A8,x
+        inx
+        cpx #40
+        bne DRAW_ROW17_LOOP
+        rts
+
+; Description: This subroutine draws the data from ROW22_DATA into row 22 of the screen memory.
+; Inputs:
+;    -ROW22_DATA - the character data to be displayed in row 22
+; Outputs: 
+;    -ROW22_DATA is added to address $0770
+DRAW_ROW22
+        ldx #0
+DRAW_ROW22_LOOP
+        lda ROW22_DATA,x
+        sta $0770,x
+        inx
+        cpx #40
+        bne DRAW_ROW22_LOOP
+        rts
+
+; Description: This subroutine continuously moves the cat sprite down the screen by incrementing its Y-coordinate.
+; Inputs: None
+; Outputs: Updates the Y-coordinate of the cat sprite to move it down.
+MOVE_CAT
+MOVE_LOOP
+        lda $D001
+        clc
+        adc #5
+        sta $D001
+
+        jsr CHECK_COLLISION
+        jsr WAIT_QUARTER_SECOND
+        
+        lda $D001
+        cmp #245
+        bcc MOVE_LOOP
+
+        lda #$20
+        sta $D001
+        jsr WAIT_QUARTER_SECOND
+        jmp MOVE_LOOP
+        rts
+
+; Description: Checks if the cat sprite is colliding with the background text based on the value from $D01F or other sprite based on value from $D01E.
+; Inputs: None
+; Outputs: None
+CHECK_COLLISION
+
+        lda $D01E
+        and #$02
+        bne COLLISION_WITH_MUSHROOM1
+
+        lda $D01E
+        and #$04
+        bne COLLISION_WITH_MUSHROOM2
+        
+        lda $D01F
+        and #$01
+        bne COLLISION_DETECTED
+
+        
+
+        lda #$01
+        sta $D027
+        rts
+
+; Description: When a collision is detected between the cat sprite and the background text. It changes the cat sprite's color to red.
+; Inputs: None
+; Outputs: 
+;    - Sprites color is changed to red
+COLLISION_DETECTED
+        lda #$02
+        sta $D027
+        rts
+
+; Description: When a collision is detected between the cat sprite and the other sprite. It disables the second sprite.
+; Inputs: None
+; Outputs: 
+;    - Sprite 1 is now disabled and sprite 0 continues
+COLLISION_WITH_MUSHROOM1
+        lda #%00000101
+        sta $D015
+
+        lda #$00
+        sta $D01E
+        rts
+
+COLLISION_WITH_MUSHROOM2
+        lda #%0000001
+        sta $D015
+
+        lda #$00
+        sta $D01E
+        rts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ; please don't change anything after this line.
